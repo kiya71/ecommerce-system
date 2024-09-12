@@ -1,0 +1,3 @@
+use to collect python
+
+python manage.py collectstatic---command
