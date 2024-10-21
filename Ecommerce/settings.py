@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'carts',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -123,9 +124,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR /'static'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
-    'Ecommerce/static',
+    BASE_DIR / 'Ecommerce/static',
 ]
 # media file configurations
 MEDIA_URL = '/media/'
@@ -147,6 +148,6 @@ MESSAGE_TAGS = {
 #smtp configuration
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'ahimedchiro27@gmail.com'
-EMAIL_HOST_PASSWORD = 'njem lksm blkh vkew'
+EMAIL_HOST_PASSWORD = 'dsqw cykw ucer mitk'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
