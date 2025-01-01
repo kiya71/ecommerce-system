@@ -36,6 +36,13 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
+            # Create a user profile
+            profile = UserProfile()
+            profile.user_id = user.id
+            profile.profile_picture = 'default/default-user.png'
+            profile.save()
+
+
             #Account activation
             current_site = get_current_site(request)
             mail_subject = 'Activate your account.'
@@ -46,8 +53,8 @@ def register(request):
                 'token':default_token_generator.make_token(user),
             })
             to_email = email
-            send_mail=EmailMessage(mail_subject, message, to=[to_email])
-            send_mail.send()
+            email_message=EmailMessage(mail_subject, message, to=[to_email])
+            email_message.send()
             #messages.success(request,'Thank you for registering with us. we have sent you an email verification link')
             return redirect('/accounts/login/?command=verification&email='+email)
     else:
@@ -135,7 +142,15 @@ def logout(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+    orders_count = orders.count()
+
+    userprofile = UserProfile.objects.get(user_id=request.user.id)
+    context = {
+        'orders_count': orders_count,
+        'userprofile': userprofile,
+    }
+    return render(request, 'accounts/dashboard.html', context)
 
 
 def forgot_password(request):
@@ -250,7 +265,7 @@ def edit_profile(request):
         'profile_form': profile_form,
         'userprofile': userprofile,
     }
-    return render(request, 'accounts/edit_profile.html', context)
+    return render(request, 'accounts/edit_profile.html',context)
 
 
 @login_required(login_url='login')

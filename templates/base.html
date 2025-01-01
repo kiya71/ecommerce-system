@@ -7,7 +7,13 @@
 <meta http-equiv="cache-control" content="max-age=604800" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title>GreatKart | One of the Biggest Online Shopping Platform</title>
+<title>milki | One of the Biggest Online Shopping Platform</title>
+
+
+  <!-- Bootstrap4 files-->
+<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.css?v=2.0" rel="stylesheet" type="text/css"/>
+
 
 <link href="{% static 'images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
 
@@ -48,72 +54,6 @@ $(document).ready(function() {
 });
 // jquery end
 </script>
-<style>
-
-  /* Hide Radio button */
-.rate > input{
-  display: none;
-}
-
-.rate{
-  display: inline-block;;
-  border: 0;
-}
-
-.rate > label{
-  float: right;
-}
-/* Showing the stars */
-.rate > label:before{
-  display: inline-block;
-  font-size: 1.1rem;
-  font-family: FontAwesome;
-  content: "\f005";
-  margin:0;
-  padding:0.3rem .2rem;
-  cursor: pointer;
-}
-
-/* Half star */
-.rate .half:before{
-  content: "\f089";
-  position: absolute;
-  padding-right: 0;
-}
-
-/* Click and hover */
-input:checked ~ label, label:hover ~ label{
-  color: #ffb503;
-}
-
-/* hover hightlight */
-input:checked + label:hover, input:checked ~ label:hover,input:checked ~ label:hover ~ label,
-label:hover ~ input:checked ~ label{
-  color: #cc9000;
-}
-
-.rating-star i{
-  color: #ffb503 !important;
-}
-
-ul.thumb{
-  margin:0 auto;
-  padding: 0;
-  float: left;
-}
-ul.thumb li{
-  list-style: none;
-  margin: 10px;
-}
-ul.thumb li img{
-  width: 80px;
-  height: 80px;
-  border: 1px solid grey;
-}
-
-
-
-</style>
 </head>
 <body>
 

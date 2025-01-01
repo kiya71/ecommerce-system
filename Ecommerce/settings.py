@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bv4nltc_iah29vsk62a99gj$$!52#!e14@!gw6^8e-qrwmcnd('
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -42,6 +45,8 @@ INSTALLED_APPS = [
     'store',
     'carts',
     'orders',
+    'admin_honeypot',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +57,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
+
+
+SESSION_EXPIRE_SECONDS = 1800  # 1 hour
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = 'accounts/login'
 
 ROOT_URLCONF = 'Ecommerce.urls'
 
@@ -78,16 +89,34 @@ WSGI_APPLICATION = 'Ecommerce.wsgi.application'
 AUTH_USER_MODEL = 'accounts.Account'
 
 
+
+
+
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+# Database Configuration
+if 'RDS_DB_NAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',  # Replace with your PostgreSQL database name
+            'USER': 'postgres',  # Replace with your PostgreSQL user
+            'PASSWORD': '12345',  # Replace with your PostgreSQL password
+            'HOST': '127.0.0.1',  # For local development
+            'PORT': '5432',  # Default PostgreSQL port
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -123,11 +152,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# STATIC_URL = '/static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+
+
+
+
+
+
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'Ecommerce/static',
-]
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+
 # media file configurations
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /'media'
@@ -145,9 +184,9 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger' "",
 }
 
-#smtp configuration
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'ahimedchiro27@gmail.com'
-EMAIL_HOST_PASSWORD = 'dsqw cykw ucer mitk'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+#smtp configuration'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
